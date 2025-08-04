@@ -8,10 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 
 const app = express();
-app.use(cors({
-  origin: 'https://rajugudapuvalasa.github.io',
-  credentials: true
-}));
+app.use(cors);
 app.use(express.json());
 
 // MongoDB connection
