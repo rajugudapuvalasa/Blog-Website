@@ -14,7 +14,6 @@ header{
   background-color: blueviolet;
   color:white;
   padding: 10px;
-  
 }
 header h2{
   margin-top: 10px;
@@ -123,7 +122,6 @@ footer {
 /* Tablet (≤768px) */
 @media (max-width: 768px) {
   .links {
-    justify-content: center;
     flex-wrap: wrap;
     gap: 20px;
     margin: 10px;
@@ -168,7 +166,7 @@ footer {
   }
 
   .links {
-    gap: 10px;
+    gap: 12px;
     margin: 5px;
   }
 
@@ -188,9 +186,8 @@ footer {
   }
 
   .blog img {
-    width: 100%;
+    width: 750%;
     height: auto;
-    align-items: center;
   }
 
   .cnt a {
@@ -198,6 +195,6 @@ footer {
   }
 
   .action-btn {
-    font-size: 16px;
+    font-size: 18px;
   }
 }
