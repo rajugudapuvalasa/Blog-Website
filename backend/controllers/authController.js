@@ -2,11 +2,12 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = 'your_jwt_secret'; // Use consistent secret key
-
 // ================= Signup =================
 exports.signup = async (req, res) => {
   try {
+    console.log('Received signup request');
+    console.log('Request body:', req.body); // 👈 ADD THIS
+
     const { username, email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
@@ -16,7 +17,7 @@ exports.signup = async (req, res) => {
     const user = new User({ username, email, password: hashedPassword });
     await user.save();
 
-    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '30d' });
+    const token = jwt.sign({ id: user._id },process.env.JWT_SECRET, { expiresIn: '30d' });
 
     res.status(201).json({ token });
   } catch (err) {
@@ -28,6 +29,9 @@ exports.signup = async (req, res) => {
 // ================= Login =================
 exports.login = async (req, res) => {
   try {
+    console.log('Received login request');
+    console.log('Request body:', req.body); // 👈 ADD THIS
+    
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
@@ -36,7 +40,7 @@ exports.login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ error: 'Invalid password' });
 
-    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '30d' });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
     res.status(200).json({ token });
   } catch (err) {

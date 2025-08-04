@@ -18,7 +18,7 @@ if (signupForm) {
       if (res.ok) {
         localStorage.setItem('token', result.token);
         alert('Signup successful');
-        location.href = 'dashboard.html';
+        window.location.href = 'dashboard.html';
       } else {
         alert(result.error || 'Signup failed');
       }
