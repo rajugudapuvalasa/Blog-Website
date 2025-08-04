@@ -35,6 +35,9 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../docs/index.html'));
 });
 
+app.get('/api/auth/test', (req, res) => {
+  res.json({ message: "Backend working fine!" });
+});
 
 // Start server
 app.listen(process.env.PORT || 7000, () => {

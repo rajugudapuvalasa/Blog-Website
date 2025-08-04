@@ -39,7 +39,7 @@ if (loginForm) {
     const data = Object.fromEntries(formData.entries());
 
     try {
-      const res = await fetch('http://blog-website-rpuc.onrender.com/api/auth/login', {
+      const res = await fetch('https://blog-website-rpuc.onrender.com/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
