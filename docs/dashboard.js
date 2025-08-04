@@ -45,7 +45,7 @@ if (document.location.pathname.includes('dashboard.html')) {
               <p>Category: ${b.category || 'Uncategorized'}</p>
               <p>Author: ${b.author?.username || 'Unknown'}</p>
               <div class="blog-actions">
-                <button class="like-btn" data-id="${b._id}" title="Like" style="background-color: #f9f9f9; padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer;">
+                <button class="like-btn" data-id="${b._id}" title="Like" style="background-color: #f9f9f9; padding: 5px 10px 5px 0px; border: none; border-radius: 6px; cursor: pointer;">
                   <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart" style="font-size: 22px; color:${isLiked ? 'hotpink' : '#555'}"></i>
                   <span class="like-count" style="margin-left: 5px; font-weight: bold; color: #444;">${b.likes?.length || 0}</span>
                 </button>
