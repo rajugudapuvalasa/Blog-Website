@@ -51,7 +51,7 @@ if (loginForm) {
         localStorage.setItem('token', result.token);
         localStorage.setItem('userId', result.userId);
         alert('Login successful!');
-        window.location.href = '/dashboard.html';
+        window.location.href = 'dashboard.html';
       } else {
         alert(result.error || 'Login failed');
       }
