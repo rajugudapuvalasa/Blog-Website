@@ -50,9 +50,13 @@
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      position: relative;
+      overflow: hidden;
     }
-
+    #editBlogForm .ql-editor {
+      max-width: 100%;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
     #editBlogForm a {
       position: absolute;
       top: 15px;
@@ -102,8 +106,13 @@
   }
 
   #editBlogForm {
-    width: 90%;
-    padding: 15px;
+    width: 95%;
+    max-width: 95%;
+    padding: 18px;
+  }
+
+  .ql-editor {
+    font-size: 15px;
   }
   #updateBtn {
     padding: 10px;
@@ -120,10 +129,14 @@
   }
 
   #editBlogForm {
-    width: 92%;
+    width: 90%;
+    max-width: 90%;
     padding: 10px;
     margin-top: 15px;
     margin-bottom: 20px;
+  }
+  .ql-editor {
+    font-size: 14px;
   }
 
   #editBlogForm a {
