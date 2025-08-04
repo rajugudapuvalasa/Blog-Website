@@ -185,7 +185,9 @@ footer {
   .cnt a {
     font-size: 13px;
   }
-
+  .blog-actions {
+  margin-top: 5px;
+  }
   .action-btn {
     font-size: 18px;
   }
