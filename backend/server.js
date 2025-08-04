@@ -24,12 +24,12 @@ mongoose.connect(process.env.MONGODB_URI, {
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Serve frontend files (assumes frontend folder is in the root project)
-app.use(express.static(path.join(__dirname, '../frontend')));
+app.use(express.static(path.join(__dirname, '../docs')));
 
 
 // Serve index.html at root URL
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+  res.sendFile(path.join(__dirname, '../docs/index.html'));
 });
 
 
