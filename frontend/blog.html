@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Blog Details</title>
+  <link rel="stylesheet" href="blog.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .meta {
+      color: gray;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .like-section {
+      margin: 10px 0;
+    }
+
+    #like-btn {
+      font-size: 18px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: red;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      background-color: orangered;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .comment {
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .back-button {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: blueviolet;
+    }
+
+    .back-button:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a class="back-button" href="dashboard.html">← </a>
+
+    <div id="blogDetails"></div>
+
+  <script>
+    const blogId = new URLSearchParams(window.location.search).get('id');
+    const blogDetails = document.getElementById('blogDetails');
+    async function loadBlog() {
+      try {
+        const res = await fetch(`http://localhost:7000/api/blogs/${blogId}`);
+        const blog = await res.json();
+
+        if (blog.error || !blog.title) {
+          blogDetails.innerHTML = '<p>Blog not found.</p>';
+          return;
+        }
+
+        blogDetails.innerHTML = `
+          <img src="http://localhost:7000/uploads/${blog.image}" alt="Blog Image">
+          <h2>${blog.title}</h2>
+          <p class="meta"><strong>Category:</strong> ${blog.category || 'Uncategorized'}</p>
+          <p class="meta"><strong>Author:</strong> ${blog.author?.username || 'Unknown'}</p>
+          <div><b>Description:</b></div>
+          <div class="cnt">${blog.content}</div>
+        `;
+      } catch (err) {
+        blogDetails.innerHTML = '<p>Error loading blog.</p>';
+        console.error(err);
+      }
+    }
+    
+    loadBlog();
+  </script>
+</body>
+</html>

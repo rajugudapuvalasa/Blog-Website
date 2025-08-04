@@ -1,0 +1,77 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Header */
+header {
+  padding: 20px;
+  background-color: black;
+}
+header h1 {
+  color: white;
+  font-size: 50px;
+}
+
+/* Body and Main Layout */
+body {
+  overflow: hidden;
+}
+main {
+  height: 100vh;
+  background-color: rgba(128, 128, 128, 0.966);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Login Container */
+.container {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 450px;
+  text-align: center;
+}
+
+/* Form Elements */
+h2 {
+  font-size: 36px;
+  padding-bottom: 30px;
+  color: blueviolet;
+}
+input {
+  width: 80%;
+  font-size: 18px;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+}
+button {
+  padding: 12px 25px;
+  font-size: 18px;
+  border-radius: 10px;
+  background-color: orangered;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+button:hover {
+  background-color: blueviolet;
+}
+p {
+  font-size: 17px;
+}
+a {
+  text-decoration: none;
+  color: orangered;
+}
+a:hover {
+  text-decoration: underline;
+}

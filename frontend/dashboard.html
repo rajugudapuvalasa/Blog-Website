@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css"> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <h2>Dashboard</h2>
+    <div class="links">
+      <a href="create.html">Create Blog</a>
+      <button id="logoutBtn">Logout</button>
+    </div>
+  </header>
+  <main>
+  <div class="sub">
+    <h3>All Blogs</h3>
+    <input type="text" id="searchInput" placeholder="Search blogs..." />
+    <select id="categorySelect">
+      <option value="">All</option>
+      <option value="Vehicles">Vehicles</option>
+      <option value="Food">Food</option>
+      <option value="Movies">Movies</option>
+      <option value="Travel">Travel</option>
+      <option value="Others">Others</option>
+    </select>
+  </div>
+
+  <div id="blogs"></div>
+  </main>
+  <footer></footer>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
