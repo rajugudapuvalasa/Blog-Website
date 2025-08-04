@@ -101,7 +101,7 @@ header h2{
 
 
 /* Media query for mobile screens */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   header h2{
     margin: 10px;
   }
@@ -115,12 +115,9 @@ header h2{
     height: auto;
   }
 }
-
-
 .blog-actions {
   margin-top: 10px;
 }
-
 .action-btn {
   background: none;
   border: none;
