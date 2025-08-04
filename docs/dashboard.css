@@ -128,7 +128,6 @@ footer {
     gap: 20px;
     margin: 10px;
   }
-
   header h2 {
     font-size: 30px;
   }
@@ -169,7 +168,6 @@ footer {
   }
 
   .links {
-    flex-direction: column;
     gap: 10px;
     margin: 5px;
   }
@@ -178,12 +176,6 @@ footer {
     flex-direction: column;
     gap: 8px;
     padding: 0 5px;
-  }
-
-  #searchInput,
-  #categorySelect {
-    width: 100%;
-    max-width: 300px;
   }
 
   #blogs {
@@ -198,6 +190,7 @@ footer {
   .blog img {
     width: 100%;
     height: auto;
+    align-items: center;
   }
 
   .cnt a {
