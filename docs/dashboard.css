@@ -130,14 +130,11 @@ footer {
   }
 
   header h2 {
-    font-size: 24px;
-    text-align: center;
-    margin-left: 0;
+    font-size: 30px;
   }
 
   .sub {
     flex-direction: column;
-    align-items: center;
     gap: 10px;
     padding: 0 10px;
   }
@@ -149,8 +146,6 @@ footer {
 
   .blog {
     flex-direction: column;
-    align-items: center;
-    text-align: center;
   }
 
   .blog img {
@@ -181,7 +176,6 @@ footer {
 
   .sub {
     flex-direction: column;
-    align-items: center;
     gap: 8px;
     padding: 0 5px;
   }
