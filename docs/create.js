@@ -28,7 +28,7 @@ blogForm.addEventListener('submit', async function (e) {
   const formData = new FormData(createblogForm);
 
   try {
-    const res = await fetch('http://localhost:7000/api/blogs', {
+    const res = await fetch('https://blog-website-rpuc.onrender.com/api/blogs', {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token

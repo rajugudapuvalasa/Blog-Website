@@ -18,7 +18,7 @@ if (document.location.pathname.includes('dashboard.html')) {
   }
 
   async function loadBlogs() {
-    const res = await fetch('http://localhost:7000/api/blogs');
+    const res = await fetch('https://blog-website-rpuc.onrender.com/api/blogs');
     const blogs = await res.json();
     const blogDiv = document.getElementById('blogs');
     const search = searchInput?.value.toLowerCase() || '';
@@ -37,7 +37,7 @@ if (document.location.pathname.includes('dashboard.html')) {
       if (matchesSearch && matchesCategory) {
         blogDiv.innerHTML += `
           <div class="blog">
-            <img src="http://localhost:7000/uploads/${b.image}" alt="Blog Image" style="max-width:200px;" />
+            <img src="https://blog-website-rpuc.onrender.com/uploads/${b.image}" alt="Blog Image" style="max-width:200px;" />
             <div class="cnt">
               <h3>${b.title}</h3>
               <p>${b.content.substring(0, 0)}des...</p>
@@ -72,7 +72,7 @@ if (document.location.pathname.includes('dashboard.html')) {
       if (!token) return alert('Login required to like!');
 
       try {
-        const res = await fetch(`http://localhost:7000/api/blogs/like/${blogId}`, {
+        const res = await fetch(`https://blog-website-rpuc.onrender.com/api/blogs/like/${blogId}`, {
           method: 'POST',
           headers: { Authorization: token }
         });
@@ -102,7 +102,7 @@ if (document.location.pathname.includes('dashboard.html')) {
     const token = localStorage.getItem('token');
     if (!token) return alert('Login required!');
     if (confirm('Are you sure you want to delete this blog?')) {
-      const res = await fetch(`http://localhost:7000/api/blogs/${id}`, {
+      const res = await fetch(`https://blog-website-rpuc.onrender.com/api/blogs/${id}`, {
         method: 'DELETE',
         headers: { Authorization: token }
       });
