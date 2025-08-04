@@ -111,7 +111,7 @@ header h2{
 
 .action-btn:hover {
   transform: scale(1.2);
-  color: #e63946; /* Red hover effect */
+  color: #da0517; /* Red hover effect */
 }
 footer {
   background-color: blueviolet;
@@ -141,19 +141,10 @@ footer {
     padding: 10px;
   }
 
-  .blog {
-    flex-direction: column;
-  }
-
   .blog img {
-    width: 100%;
+    width: 80%;
     height: auto;
   }
-
-  .cnt {
-    align-items: center;
-  }
-
   .cnt a {
     font-size: 14px;
   }
@@ -163,6 +154,7 @@ footer {
 @media (max-width: 480px) {
   header h2 {
     font-size: 28px;
+    margin-left: 5px;
   }
 
   .links {
@@ -186,7 +178,7 @@ footer {
   }
 
   .blog img {
-    width: 750%;
+    width: 70%;
     height: auto;
   }
 
