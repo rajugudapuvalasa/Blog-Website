@@ -8,7 +8,10 @@ const authRoutes = require('./routes/authRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 
 const app = express();
-app.use(cors);
+app.use(cors({
+  origin: 'https://rajugudapuvalasa.github.io',
+  credentials: true
+}));
 app.use(express.json());
 
 // MongoDB connection
@@ -24,15 +27,6 @@ app.use('/api/blogs', blogRoutes);
 
 // Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Serve frontend files (assumes frontend folder is in the root project)
-app.use(express.static(path.join(__dirname, '../docs')));
-
-
-// Serve index.html at root URL
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../docs/index.html'));
-});
 
 app.get('/api/auth/test', (req, res) => {
   res.json({ message: "Backend working fine!" });
