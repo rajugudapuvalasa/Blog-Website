@@ -19,6 +19,9 @@ mongoose.connect(process.env.MONGODB_URI, {
 }).then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('MongoDB error:', err));
 
+// API routes
+app.use('/api/auth', authRoutes);
+app.use('/api/blogs', blogRoutes);
 
 // Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -32,10 +35,6 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../docs/index.html'));
 });
 
-
-// API routes
-app.use('/api/auth', authRoutes);
-app.use('/api/blogs', blogRoutes);
 
 // Start server
 app.listen(process.env.PORT || 7000, () => {
