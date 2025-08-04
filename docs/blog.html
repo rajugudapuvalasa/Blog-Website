@@ -88,7 +88,7 @@
     const blogDetails = document.getElementById('blogDetails');
     async function loadBlog() {
       try {
-        const res = await fetch(`http://localhost:7000/api/blogs/${blogId}`);
+        const res = await fetch(`https://blog-website-rpuc.onrender.com/api/blogs/${blogId}`);
         const blog = await res.json();
 
         if (blog.error || !blog.title) {
@@ -97,7 +97,7 @@
         }
 
         blogDetails.innerHTML = `
-          <img src="http://localhost:7000/uploads/${blog.image}" alt="Blog Image">
+          <img src="https://blog-website-rpuc.onrender.com/uploads/${blog.image}" alt="Blog Image">
           <h2>${blog.title}</h2>
           <p class="meta"><strong>Category:</strong> ${blog.category || 'Uncategorized'}</p>
           <p class="meta"><strong>Author:</strong> ${blog.author?.username || 'Unknown'}</p>

@@ -10,7 +10,7 @@ const editBlogForm = document.getElementById('editBlogForm');
 // Load blog data into form
 async function loadBlog() {
   try {
-    const res = await fetch(`http://localhost:7000/api/blogs/${blogId}`);
+    const res = await fetch(`https://blog-website-rpuc.onrender.com/api/blogs/${blogId}`);
     const data = await res.json();
 
     if (res.ok) {
@@ -40,7 +40,7 @@ editBlogForm.addEventListener('submit', async (e) => {
   }
 
   try {
-    const res = await fetch(`http://localhost:7000/api/blogs/${blogId}`, {
+    const res = await fetch(`https://blog-website-rpuc.onrender.com/api/blogs/${blogId}`, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
