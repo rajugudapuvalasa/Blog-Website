@@ -18,20 +18,22 @@ const quill = new Quill('#editor', {
   }
 });
 
-const createblogForm = document.getElementById('blogForm');
+const blogForm = document.getElementById('blogForm');
 blogForm.addEventListener('submit', async function (e) {
   e.preventDefault();
 
   // Set content from Quill to hidden field
-  document.getElementById('hiddenContent').value = quill.root.innerHTML;
+  const content = quill.root.innerHTML;
+  document.getElementById('hiddenContent').value = content;
 
-  const formData = new FormData(createblogForm);
+  const formData = new FormData(blogForm);
 
   try {
     const res = await fetch('https://blog-website-rpuc.onrender.com/api/blogs', {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token
+        // DO NOT set Content-Type header manually with FormData
       },
       body: formData
     });
@@ -51,11 +53,11 @@ blogForm.addEventListener('submit', async function (e) {
     }
 
     const result = await res.json();
-    alert('Blog created!');
+    alert('Blog created successfully!');
     window.location.href = 'dashboard.html';
 
   } catch (err) {
-    alert('Error: ' + err.message);
+    console.error('Fetch error:', err);
+    alert('Something went wrong while creating the blog.');
   }
-
 });
