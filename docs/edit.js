@@ -45,7 +45,7 @@ editBlogForm.addEventListener('submit', async (e) => {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      body: formData
+      body: JSON.stringify(formData)
     });
 
     const result = await res.json();

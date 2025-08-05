@@ -33,7 +33,7 @@ blogForm.addEventListener('submit', async function (e) {
       headers: {
         Authorization: 'Bearer ' + token
       },
-      body: formData
+      body: JSON.stringify(formData)
     });
 
     const result = await res.json();
