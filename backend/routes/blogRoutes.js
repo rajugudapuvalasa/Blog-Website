@@ -5,7 +5,7 @@ const auth = require('../middleware/auth');
 const Blog = require('../models/Blog');
 
 // ✅ Use Cloudinary upload instead of diskStorage
-const upload = require('../middlewares/cloudinaryUpload');
+const upload = require('../middleware/cloudinaryUpload');
 
 // ✅ Get all blogs
 router.get('/', blogController.getBlogs);
