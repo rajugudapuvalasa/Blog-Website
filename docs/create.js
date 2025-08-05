@@ -36,15 +36,26 @@ blogForm.addEventListener('submit', async function (e) {
       body: formData
     });
 
-    const result = await res.json();
+    const contentType = res.headers.get('content-type');
 
-    if (res.ok) {
-      alert('Blog created!');
-      window.location.href = 'dashboard.html';
-    } else {
-      alert(result.error || 'Blog creation failed');
+    if (!res.ok) {
+      if (contentType && contentType.includes('application/json')) {
+        const errorData = await res.json();
+        alert(errorData.error || 'Blog creation failed');
+      } else {
+        const errorText = await res.text();
+        console.error('Server error:', errorText);
+        alert('Server error occurred.');
+      }
+      return;
     }
+
+    const result = await res.json();
+    alert('Blog created!');
+    window.location.href = 'dashboard.html';
+
   } catch (err) {
     alert('Error: ' + err.message);
   }
+
 });

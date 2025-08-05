@@ -31,9 +31,11 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
       image: req.file?.path, // Cloudinary gives full URL in `file.path`
       author: req.userId
     });
+    console.log('File upload:', req.file);
     await blog.save();
     res.status(201).json(blog);
   } catch (err) {
+      console.error('Create Blog Error:', err); // ✅ Log it to see full stack
     res.status(500).json({ message: 'Failed to create blog', error: err });
   }
 });
