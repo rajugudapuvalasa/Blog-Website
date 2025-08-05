@@ -41,6 +41,10 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
 // ✅ Update blog
 router.put('/:id', auth, upload.single('image'), async (req, res) => {
   try {
+    console.log('PUT Request Body:', req.body);         // 💡 Debug incoming data
+    console.log('File info:', req.file);                // 💡 Check uploaded file
+    console.log('User ID:', req.userId);                // 💡 Confirm authenticated user
+
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ message: 'Blog not found' });
 
@@ -48,19 +52,24 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
+    // Update fields
     blog.title = req.body.title;
     blog.content = req.body.content;
     blog.category = req.body.category;
+
     if (req.file) {
-      blog.image = req.file.path; // Cloudinary image URL
+      blog.image = req.file.path;
     }
 
     await blog.save();
+
     res.json({ message: 'Blog updated successfully', blog });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to update blog', error: err });
+    console.error('Update Blog Error:', err); // 🔍 Log full error in terminal
+    res.status(500).json({ message: 'Failed to update blog', error: err.message });
   }
 });
+
 
 // ✅ Like toggle
 router.post('/like/:id', auth, async (req, res) => {

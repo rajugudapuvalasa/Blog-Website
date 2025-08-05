@@ -36,5 +36,5 @@ app.get('/api/auth/test', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server started on port ${process.env.PORT || 7000}`);
+  console.log(`Server started on port ${PORT}`);
 });
