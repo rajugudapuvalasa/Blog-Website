@@ -9,9 +9,10 @@ const blogRoutes = require('./routes/blogRoutes');
 
 const app = express();
 app.use(cors({
-  origin: 'https://rajugudapuvalasa.github.io',
+  origin: ['https://rajugudapuvalasa.github.io', 'https://blogwebsite3.netlify.app'],
   credentials: true
 }));
+
 app.use(express.json());
 
 const PORT = process.env.PORT;
