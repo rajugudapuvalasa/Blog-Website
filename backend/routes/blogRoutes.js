@@ -1,16 +1,11 @@
 const express = require('express');
-const multer = require('multer');
 const router = express.Router();
 const blogController = require('../controllers/blogController');
 const auth = require('../middleware/auth');
 const Blog = require('../models/Blog');
 
-// Multer config for image uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads'),
-  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
-});
-const upload = multer({ storage });
+// ✅ Use Cloudinary upload instead of diskStorage
+const upload = require('../middlewares/cloudinaryUpload');
 
 // ✅ Get all blogs
 router.get('/', blogController.getBlogs);
@@ -26,14 +21,14 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Create blog
+// ✅ Create blog
 router.post('/', auth, upload.single('image'), async (req, res) => {
   try {
     const blog = new Blog({
       title: req.body.title,
       content: req.body.content,
       category: req.body.category,
-      image: req.file?.filename,
+      image: req.file?.path, // Cloudinary gives full URL in `file.path`
       author: req.userId
     });
     await blog.save();
@@ -43,7 +38,7 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
   }
 });
 
-// Update blog
+// ✅ Update blog
 router.put('/:id', auth, upload.single('image'), async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
@@ -57,7 +52,7 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
     blog.content = req.body.content;
     blog.category = req.body.category;
     if (req.file) {
-      blog.image = req.file.filename;
+      blog.image = req.file.path; // Cloudinary image URL
     }
 
     await blog.save();
@@ -67,7 +62,7 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
   }
 });
 
-// Like toggle
+// ✅ Like toggle
 router.post('/like/:id', auth, async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
