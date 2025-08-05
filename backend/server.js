@@ -14,6 +14,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
+const PORT = process.env.PORT;
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
@@ -33,6 +34,6 @@ app.get('/api/auth/test', (req, res) => {
 });
 
 // Start server
-app.listen(process.env.PORT || 7000, () => {
+app.listen(PORT, () => {
   console.log(`Server started on port ${process.env.PORT || 7000}`);
 });
