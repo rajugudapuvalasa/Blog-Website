@@ -3,7 +3,7 @@ const Blog = require('../models/Blog');
 exports.createBlog = async (req, res) => {
   try {
     const { title, content, category } = req.body;
-    const image = req.file ? req.file.filename : '';
+    const image = req.file ? req.file.path : '';
 
     const blog = new Blog({
       title,
