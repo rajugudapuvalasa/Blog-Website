@@ -24,21 +24,26 @@ router.get('/:id', async (req, res) => {
 // ✅ Create blog
 router.post('/', auth, upload.single('image'), async (req, res) => {
   try {
+    console.log('Incoming data:', req.body);
+    console.log('Uploaded file:', req.file);
+
     const blog = new Blog({
       title: req.body.title,
       content: req.body.content,
       category: req.body.category,
-      image: req.file?.path, // Cloudinary gives full URL in `file.path`
+      image: req.file?.path,
       author: req.userId
     });
-    console.log('File upload:', req.file);
+
     await blog.save();
     res.status(201).json(blog);
+
   } catch (err) {
-      console.error('Create Blog Error:', err); // ✅ Log it to see full stack
-    res.status(500).json({ message: 'Failed to create blog', error: err });
+    console.error('Blog creation error:', err);
+    res.status(500).json({ message: 'Failed to create blog', error: err.message });
   }
 });
+
 
 // ✅ Update blog
 router.put('/:id', auth, upload.single('image'), async (req, res) => {
