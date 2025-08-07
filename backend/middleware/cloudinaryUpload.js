@@ -13,5 +13,5 @@ const storage = new CloudinaryStorage({
 });
 
 const parser = multer({ storage });
-
+console.log("Cloudinary Config:", cloudinary.config());
 module.exports = parser;
