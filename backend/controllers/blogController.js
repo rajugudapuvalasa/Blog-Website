@@ -1,14 +1,23 @@
 const Blog = require('../models/Blog');
+const cloudinary = require('../middleware/cloudinaryUpload');
 
 exports.createBlog = async (req, res) => {
   try {
     const { title, content, category } = req.body;
-    const image = req.file ? req.file.path : '';
+
+    let imageUrl = '';
+
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'blog-images',
+      });
+      imageUrl = result.secure_url;
+    }
 
     const blog = new Blog({
       title,
       content,
-      image,
+      image: imageUrl,
       category,
       author: req.userId
     });
@@ -16,9 +25,11 @@ exports.createBlog = async (req, res) => {
     await blog.save();
     res.status(201).json(blog);
   } catch (err) {
+    console.error('Error creating blog:', err);
     res.status(500).json({ error: 'Failed to create blog' });
   }
 };
+
 
 exports.getBlogs = async (req, res) => {
   try {
