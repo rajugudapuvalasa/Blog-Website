@@ -27,12 +27,16 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
     console.log('Incoming data:', req.body);
     console.log('Uploaded file:', req.file);
 
+    if (!req.body.title || !req.body.content || !req.body.category || !req.userId) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
     const blog = new Blog({
       title: req.body.title,
       content: req.body.content,
       category: req.body.category,
-      image: req.file?req.file.path:null,
-      author: req.userId
+      image: req.file?.path || null,
+      author: req.userId,
     });
 
     await blog.save();
