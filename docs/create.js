@@ -1,8 +1,6 @@
 const token = localStorage.getItem('token');
-if (!token) {
-  alert('Unauthorized! Please login again.');
-  window.location.href = 'login.html';
-}
+const createblogForm = document.getElementById('blogForm');
+
 
 const quill = new Quill('#editor', {
   theme: 'snow',
@@ -18,7 +16,6 @@ const quill = new Quill('#editor', {
   }
 });
 
-const createblogForm = document.getElementById('blogForm');
 blogForm.addEventListener('submit', async function (e) {
   e.preventDefault();
 
@@ -38,13 +35,17 @@ blogForm.addEventListener('submit', async function (e) {
 
     const result = await res.json();
 
-    if (res.ok) {
-      alert('Blog created!');
+    if (!response.ok) {
+        console.error('Error creating blog:', result);
+        alert(result.error || 'Failed to create blog.');
+        return;
+      }
+
+      alert('Blog posted successfully!');
       window.location.href = 'dashboard.html';
-    } else {
-      alert(result.error || 'Blog creation failed');
+
+    } catch (error) {
+      console.error('Network error:', error);
+      alert('Something went wrong. Please try again.');
     }
-  } catch (err) {
-    alert('Error: ' + err.message);
-  }
 });
