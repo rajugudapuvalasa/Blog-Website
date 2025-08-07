@@ -18,46 +18,33 @@ const quill = new Quill('#editor', {
   }
 });
 
-const blogForm = document.getElementById('blogForm');
+const createblogForm = document.getElementById('blogForm');
 blogForm.addEventListener('submit', async function (e) {
   e.preventDefault();
 
   // Set content from Quill to hidden field
-  const content = quill.root.innerHTML;
-  document.getElementById('hiddenContent').value = content;
+  document.getElementById('hiddenContent').value = quill.root.innerHTML;
 
-  const formData = new FormData(blogForm);
+  const formData = new FormData(createblogForm);
 
   try {
     const res = await fetch('https://blog-website-rpuc.onrender.com/api/blogs', {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token
-        // DO NOT set Content-Type header manually with FormData
       },
       body: formData
     });
 
-    const contentType = res.headers.get('content-type');
-
-    if (!res.ok) {
-      if (contentType && contentType.includes('application/json')) {
-        const errorData = await res.json();
-        alert(errorData.error || 'Blog creation failed');
-      } else {
-        const errorText = await res.text();
-        console.error('Server error:', errorText);
-        alert('Server error occurred.');
-      }
-      return;
-    }
-
     const result = await res.json();
-    alert('Blog created successfully!');
-    window.location.href = 'dashboard.html';
 
+    if (res.ok) {
+      alert('Blog created!');
+      window.location.href = 'dashboard.html';
+    } else {
+      alert(result.error || 'Blog creation failed');
+    }
   } catch (err) {
-    console.error('Fetch error:', err);
-    alert('Something went wrong while creating the blog.');
+    alert('Error: ' + err.message);
   }
 });
