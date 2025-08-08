@@ -1,5 +1,5 @@
 const Blog = require('../models/Blog');
-const cloudinary = require('../middleware/cloudinaryUpload');
+const path = require('path');
 
 exports.createBlog = async (req, res) => {
   try {
@@ -8,10 +8,7 @@ exports.createBlog = async (req, res) => {
     let imageUrl = '';
 
     if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: 'blog-images',
-      });
-      imageUrl = result.secure_url;
+      imageUrl = `/uploads/${req.file.filename}`; // Relative path for frontend
     }
 
     const blog = new Blog({
@@ -29,7 +26,6 @@ exports.createBlog = async (req, res) => {
     res.status(500).json({ error: 'Failed to create blog' });
   }
 };
-
 
 exports.getBlogs = async (req, res) => {
   try {
