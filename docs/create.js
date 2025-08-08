@@ -1,6 +1,5 @@
 const token = localStorage.getItem('token');
-const createblogForm = document.getElementById('blogForm');
-
+const blogForm = document.getElementById('blogForm');
 
 const quill = new Quill('#editor', {
   theme: 'snow',
@@ -19,33 +18,33 @@ const quill = new Quill('#editor', {
 blogForm.addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  // Set content from Quill to hidden field
+  // Set the content to hidden input
   document.getElementById('hiddenContent').value = quill.root.innerHTML;
 
-  const formData = new FormData(createblogForm);
+  const formData = new FormData(blogForm);
 
   try {
     const res = await fetch('https://blog-website-rpuc.onrender.com/api/blogs', {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token
+        // Note: DO NOT set 'Content-Type' when using FormData!
       },
       body: formData
     });
 
     const result = await res.json();
 
-    if (!response.ok) {
-        console.error('Error creating blog:', result);
-        alert(result.error || 'Failed to create blog.');
-        return;
-      }
-
-      alert('Blog posted successfully!');
-      window.location.href = 'dashboard.html';
-
-    } catch (error) {
-      console.error('Network error:', error);
-      alert('Something went wrong. Please try again.');
+    if (!res.ok) {
+      console.error('Error creating blog:', result);
+      alert(result.error || 'Failed to create blog.');
+      return;
     }
+
+    alert('Blog posted successfully!');
+    window.location.href = 'dashboard.html';
+  } catch (error) {
+    console.error('Network error:', error);
+    alert('Something went wrong. Please try again.');
+  }
 });

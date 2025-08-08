@@ -4,8 +4,8 @@ const blogController = require('../controllers/blogController');
 const auth = require('../middleware/auth');
 const Blog = require('../models/Blog');
 
-// ✅ Use Cloudinary upload instead of diskStorage
-const upload = require('../middleware/cloudinaryUpload');
+// ✅ Use Multer for local uploads
+const upload = require('../middleware/multerConfig');
 
 // ✅ Get all blogs
 router.get('/', blogController.getBlogs);
@@ -35,7 +35,7 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
       title: req.body.title,
       content: req.body.content,
       category: req.body.category,
-      image: req.file?.path || null,
+      image: req.file ? `/uploads/${req.file.filename}` : null,
       author: req.userId,
     });
 
@@ -48,13 +48,12 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
   }
 });
 
-
 // ✅ Update blog
 router.put('/:id', auth, upload.single('image'), async (req, res) => {
   try {
-    console.log('PUT Request Body:', req.body);         // 💡 Debug incoming data
-    console.log('File info:', req.file);                // 💡 Check uploaded file
-    console.log('User ID:', req.userId);                // 💡 Confirm authenticated user
+    console.log('PUT Request Body:', req.body);
+    console.log('File info:', req.file);
+    console.log('User ID:', req.userId);
 
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ message: 'Blog not found' });
@@ -69,18 +68,16 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
     blog.category = req.body.category;
 
     if (req.file) {
-      blog.image = req.file.path;
+      blog.image = `/uploads/${req.file.filename}`;
     }
 
     await blog.save();
-
     res.json({ message: 'Blog updated successfully', blog });
   } catch (err) {
-    console.error('Update Blog Error:', err); // 🔍 Log full error in terminal
+    console.error('Update Blog Error:', err);
     res.status(500).json({ message: 'Failed to update blog', error: err.message });
   }
 });
-
 
 // ✅ Like toggle
 router.post('/like/:id', auth, async (req, res) => {
