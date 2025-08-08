@@ -8,7 +8,7 @@ const Blog = require('../models/Blog');
 const upload = require('../middleware/multerConfig');
 
 // ✅ Get all blogs
-router.get('/', blogController.getBlogs);
+router.get('/', getBlogs);
 
 // ✅ Get single blog by ID
 router.get('/:id', async (req, res) => {

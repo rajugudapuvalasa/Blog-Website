@@ -3,29 +3,30 @@ const path = require('path');
 
 exports.createBlog = async (req, res) => {
   try {
-    const { title, content, category } = req.body;
+    const { title, category, content } = req.body;
 
-    let imageUrl = '';
-
-    if (req.file) {
-      imageUrl = `/uploads/${req.file.filename}`; // Relative path for frontend
+    if (!title || !category || !content) {
+      return res.status(400).json({ error: 'All fields are required' });
     }
 
-    const blog = new Blog({
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : '';
+
+    const newBlog = new Blog({
       title,
-      content,
-      image: imageUrl,
       category,
-      author: req.userId
+      content,
+      image: imagePath,
+      author: req.user.id
     });
 
-    await blog.save();
-    res.status(201).json(blog);
-  } catch (err) {
-    console.error('Error creating blog:', err);
-    res.status(500).json({ error: 'Failed to create blog' });
+    await newBlog.save();
+    res.status(201).json({ message: 'Blog created successfully', blog: newBlog });
+  } catch (error) {
+    console.error('Error creating blog:', error);
+    res.status(500).json({ error: 'Server error' });
   }
 };
+
 
 exports.getBlogs = async (req, res) => {
   try {

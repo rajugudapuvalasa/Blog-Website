@@ -1,36 +1,34 @@
 const multer = require('multer');
 const path = require('path');
 
-// Define storage strategy
+// Set storage engine
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Make sure 'uploads/' folder exists
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // ensure this folder exists in root
   },
-  filename: (req, file, cb) => {
-    const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9);
+  filename: function (req, file, cb) {
     const ext = path.extname(file.originalname);
-    cb(null, uniqueName + ext);
+    cb(null, Date.now() + ext);
   }
 });
 
-// Optional: Filter file types (images only)
+// File filter (accept only image types)
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|webp/;
+  const allowedTypes = /jpeg|jpg|png|gif/;
   const ext = allowedTypes.test(path.extname(file.originalname).toLowerCase());
   const mime = allowedTypes.test(file.mimetype);
 
   if (ext && mime) {
     cb(null, true);
   } else {
-    cb(new Error('Only images are allowed'), false);
+    cb(new Error('Only images are allowed'));
   }
 };
 
-// Create multer instance
 const upload = multer({
-  storage,
-  fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 } // Limit: 5MB
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB max
 });
 
 module.exports = upload;
