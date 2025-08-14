@@ -15,7 +15,7 @@ exports.createBlog = async (req, res) => {
       category,
       content,
       image: imagePath,
-      author: req.user.id
+      author: req.userId
     });
 
     await newBlog.save();

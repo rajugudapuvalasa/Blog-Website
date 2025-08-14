@@ -28,7 +28,6 @@ blogForm.addEventListener('submit', async function (e) {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token
-        // Note: DO NOT set 'Content-Type' when using FormData!
       },
       body: formData
     });
