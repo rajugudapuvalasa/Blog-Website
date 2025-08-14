@@ -6,18 +6,18 @@ exports.createBlog = async (req, res) => {
     const userId = req.user.id; // Assuming req.user is set in auth middleware
     const userName = req.user.name; // If you store name in token
 
-    const { title, category, content, imageUrls } = req.body;
-    if (!title || !category || !content || !imageUrls) {
+    const { title, category, content } = req.body;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : '';
+
+    if (!title || !category || !content || !imagePath) {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : '';
-
     const newBlog = new Blog({
       title,
-      description,
+      content,
       category,
-      imageUrls,
+      imageUrls:imagePath,
       author: userName, // ✅ Set author from logged-in user
       authorId: userId, // ✅ Store ID for reference
     });
