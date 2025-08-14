@@ -3,23 +3,20 @@ const Blog = require('../models/Blog');
 // ✅ Create Blog
 exports.createBlog = async (req, res) => {
   try {
-    const userId = req.user.id; // Assuming req.user is set in auth middleware
-    const userName = req.user.name; // If you store name in token
+    const userId = req.user.id; // From auth middleware
+    const userName = req.user.name; // From token
 
-    const { title, category, content } = req.body;
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : '';
-
-    if (!title || !category || !content || !imagePath) {
+    const { title, category, content, image } = req.body; // match model field names
+    if (!title || !category || !content || !image) {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
     const newBlog = new Blog({
       title,
-      content,
+      content,       // ✅ matches schema
       category,
-      imageUrls:imagePath,
-      author: userName, // ✅ Set author from logged-in user
-      authorId: userId, // ✅ Store ID for reference
+      image,         // ✅ matches schema
+      author: userId // ✅ store ObjectId for reference
     });
 
     await newBlog.save();
@@ -29,6 +26,7 @@ exports.createBlog = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
 
 // ✅ Get All Blogs
 exports.getBlogs = async (req, res) => {
