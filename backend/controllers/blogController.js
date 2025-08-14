@@ -3,8 +3,11 @@ const Blog = require('../models/Blog');
 // ✅ Create Blog
 exports.createBlog = async (req, res) => {
   try {
-    const { title, category, content } = req.body;
-    if (!title || !category || !content) {
+    const userId = req.user.id; // Assuming req.user is set in auth middleware
+    const userName = req.user.name; // If you store name in token
+
+    const { title, category, content, imageUrls } = req.body;
+    if (!title || !category || !content || !imageUrls) {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
@@ -12,10 +15,11 @@ exports.createBlog = async (req, res) => {
 
     const newBlog = new Blog({
       title,
+      description,
       category,
-      content,
-      image: imagePath,
-      author: req.userId
+      imageUrls,
+      author: userName, // ✅ Set author from logged-in user
+      authorId: userId, // ✅ Store ID for reference
     });
 
     await newBlog.save();
