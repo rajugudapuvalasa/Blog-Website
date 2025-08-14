@@ -1,19 +1,25 @@
 const Blog = require('../models/Blog');
 
-// ✅ Create Blog
+// ✅ Create Blog with image upload
 exports.createBlog = async (req, res) => {
   try {
-    const { title, category, content, image } = req.body; // match model field names
-    if (!title || !category || !content || !image) {
-      return res.status(400).json({ error: 'All are required' });
-    }
+    const { title, category, content } = req.body;
+
+    // Multer stores uploaded file in req.file
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
+    if (!title) return res.status(400).json({ error: 'Title is required' });
+    if (!category) return res.status(400).json({ error: 'Category is required' });
+    if (!content) return res.status(400).json({ error: 'Content is required' });
+    if (!req.file) return res.status(400).json({ error: 'Image is required' });
+
 
     const newBlog = new Blog({
       title,
-      content,       // ✅ matches schema
+      content,
       category,
-      image,         // ✅ matches schema
-      author: req.userId // ✅ store ObjectId for reference
+      image: imageUrl,       // Store uploaded file path
+      author: req.user.userId // Comes from auth middleware
     });
 
     await newBlog.save();
@@ -23,7 +29,6 @@ exports.createBlog = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
-
 
 // ✅ Get All Blogs
 exports.getBlogs = async (req, res) => {
@@ -52,7 +57,7 @@ exports.updateBlog = async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
 
-    if (blog.author.toString() !== req.userId) {
+    if (blog.author.toString() !== req.user.userId) {
       return res.status(403).json({ error: 'Access denied: Not your blog' });
     }
 
@@ -78,7 +83,7 @@ exports.deleteBlog = async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
 
-    if (blog.author.toString() !== req.userId) {
+    if (blog.author.toString() !== req.user.userId) {
       return res.status(403).json({ error: 'Access denied: Not your blog' });
     }
 
@@ -95,7 +100,7 @@ exports.toggleLike = async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
 
-    const userId = req.userId;
+    const userId = req.user.userId;
     const liked = blog.likes.includes(userId);
 
     if (liked) {
