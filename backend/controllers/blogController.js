@@ -3,12 +3,9 @@ const Blog = require('../models/Blog');
 // ✅ Create Blog
 exports.createBlog = async (req, res) => {
   try {
-    const userId = req.user.id; // From auth middleware
-    const userName = req.user.name; // From token
-
     const { title, category, content, image } = req.body; // match model field names
     if (!title || !category || !content || !image) {
-      return res.status(400).json({ error: 'All fields are required' });
+      return res.status(400).json({ error: 'All are required' });
     }
 
     const newBlog = new Blog({
@@ -16,7 +13,7 @@ exports.createBlog = async (req, res) => {
       content,       // ✅ matches schema
       category,
       image,         // ✅ matches schema
-      author: userId // ✅ store ObjectId for reference
+      author: req.userId // ✅ store ObjectId for reference
     });
 
     await newBlog.save();
