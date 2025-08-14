@@ -13,13 +13,12 @@ exports.createBlog = async (req, res) => {
     if (!content) return res.status(400).json({ error: 'Content is required' });
     if (!req.file) return res.status(400).json({ error: 'Image is required' });
 
-
     const newBlog = new Blog({
       title,
       content,
       category,
-      image: imageUrl,       // Store uploaded file path
-      author: req.user.userId // Comes from auth middleware
+      image: imageUrl,         // Store uploaded file path
+      author: req.userId       // ✅ Fix: using req.userId from auth middleware
     });
 
     await newBlog.save();
@@ -57,7 +56,8 @@ exports.updateBlog = async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
 
-    if (blog.author.toString() !== req.user.userId) {
+    // ✅ Fix: Compare with req.userId instead of req.user.userId
+    if (blog.author.toString() !== req.userId) {
       return res.status(403).json({ error: 'Access denied: Not your blog' });
     }
 
@@ -83,7 +83,8 @@ exports.deleteBlog = async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
 
-    if (blog.author.toString() !== req.user.userId) {
+    // ✅ Fix: Compare with req.userId
+    if (blog.author.toString() !== req.userId) {
       return res.status(403).json({ error: 'Access denied: Not your blog' });
     }
 
@@ -100,7 +101,7 @@ exports.toggleLike = async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
 
-    const userId = req.user.userId;
+    const userId = req.userId; // ✅ Fix: Use req.userId
     const liked = blog.likes.includes(userId);
 
     if (liked) {
