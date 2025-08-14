@@ -6,7 +6,7 @@ exports.createBlog = async (req, res) => {
     const { title, category, content } = req.body;
 
     // Multer stores uploaded file in req.file
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+    const imageUrl = req.file ? `${req.file.filename}` : null;
 
     if (!title) return res.status(400).json({ error: 'Title is required' });
     if (!category) return res.status(400).json({ error: 'Category is required' });
@@ -66,7 +66,7 @@ exports.updateBlog = async (req, res) => {
     blog.category = req.body.category || blog.category;
 
     if (req.file) {
-      blog.image = `/uploads/${req.file.filename}`;
+      blog.image = `${req.file.filename}`;
     }
 
     await blog.save();
