@@ -1,24 +1,27 @@
 const Blog = require('../models/Blog');
+const cloudinary = require('../config/cloudinary'); // ✅ Cloudinary config
 
-// ✅ Create Blog with image upload
+// ✅ Create Blog with Cloudinary image upload
 exports.createBlog = async (req, res) => {
   try {
     const { title, category, content } = req.body;
-
-    // Multer stores uploaded file in req.file
-    const imageUrl = req.file ? `${req.file.filename}` : null;
 
     if (!title) return res.status(400).json({ error: 'Title is required' });
     if (!category) return res.status(400).json({ error: 'Category is required' });
     if (!content) return res.status(400).json({ error: 'Content is required' });
     if (!req.file) return res.status(400).json({ error: 'Image is required' });
 
+    // ✅ Upload to Cloudinary
+    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'blog_images'
+    });
+
     const newBlog = new Blog({
       title,
       content,
       category,
-      image: imageUrl,         // Store uploaded file path
-      author: req.userId       // ✅ Fix: using req.userId from auth middleware
+      image: uploadResult.secure_url, // ✅ Save Cloudinary URL
+      author: req.userId
     });
 
     await newBlog.save();
@@ -50,13 +53,12 @@ exports.getSingleBlog = async (req, res) => {
   }
 };
 
-// ✅ Update Blog
+// ✅ Update Blog with optional Cloudinary upload
 exports.updateBlog = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
 
-    // ✅ Fix: Compare with req.userId instead of req.user.userId
     if (blog.author.toString() !== req.userId) {
       return res.status(403).json({ error: 'Access denied: Not your blog' });
     }
@@ -66,7 +68,10 @@ exports.updateBlog = async (req, res) => {
     blog.category = req.body.category || blog.category;
 
     if (req.file) {
-      blog.image = `${req.file.filename}`;
+      const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'blog_images'
+      });
+      blog.image = uploadResult.secure_url;
     }
 
     await blog.save();
@@ -83,7 +88,6 @@ exports.deleteBlog = async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
 
-    // ✅ Fix: Compare with req.userId
     if (blog.author.toString() !== req.userId) {
       return res.status(403).json({ error: 'Access denied: Not your blog' });
     }
@@ -101,7 +105,7 @@ exports.toggleLike = async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
 
-    const userId = req.userId; // ✅ Fix: Use req.userId
+    const userId = req.userId;
     const liked = blog.likes.includes(userId);
 
     if (liked) {
