@@ -6,7 +6,6 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
 const blogRoutes = require('./routes/blogRoutes');
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -22,9 +21,6 @@ app.use(cors({
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Serve static uploads
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
