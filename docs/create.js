@@ -24,7 +24,7 @@ blogForm.addEventListener('submit', async function (e) {
   const formData = new FormData(blogForm);
 
   try {
-    const res = await fetch('https://blog-website-rpuc.onrender.com/api/blogs', {
+    const res = await fetch('https://blog-website-rpuc.onrender.com/api/blogs/create', {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token
