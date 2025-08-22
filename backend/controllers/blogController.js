@@ -1,4 +1,5 @@
 const Blog = require('../models/Blog');
+const cloudinary = require("../config/cloudinary");
 
 // ✅ Create Blog
 exports.createBlog = async (req, res) => {
@@ -6,11 +7,6 @@ exports.createBlog = async (req, res) => {
      console.log("Incoming blog data:", req.body);
     console.log("Incoming file:", req.file);
 
-    let imageUrl = null;
-    if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path);
-      imageUrl = result.secure_url;
-    }
     const { title, category, content } = req.body;
 
     if (!title) return res.status(400).json({ error: 'Title is required' });
@@ -22,7 +18,7 @@ exports.createBlog = async (req, res) => {
       title,
       content,
       category,
-      image: imageUrl, // Cloudinary URL
+      image: req.file.path, // Cloudinary URL
       author: req.userId
     });
 
@@ -83,9 +79,7 @@ exports.updateBlog = async (req, res) => {
     res.json({ message: 'Blog updated successfully', blog });
   } catch (error) {
     console.error('Update Blog Error:', error);
-    if (!res.headersSent) {
-      res.status(500).json({ error: error.message || 'Internal server error' });
-    }
+    res.status(500).json({ error: error.message || 'Internal server error' });
   }
 };
 
