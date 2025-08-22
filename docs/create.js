@@ -32,11 +32,20 @@ blogForm.addEventListener('submit', async function (e) {
       body: formData
     });
 
-    const result = await res.json();
+    let result;
+    const contentType = res.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      result = await res.json();
+    } else {
+      const text = await res.text();
+      console.error('Server returned non-JSON:', text);
+      alert('Server error: ' + text);
+      return;
+    }
 
     if (!res.ok) {
       console.error('Error creating blog:', result);
-      alert(result.error || 'Failed to create blog.');
+      alert(result.error || result.message || 'Failed to create blog.');
       return;
     }
 
