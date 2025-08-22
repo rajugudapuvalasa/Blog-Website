@@ -5,8 +5,8 @@ const jwt = require('jsonwebtoken');
 // ================= Signup =================
 exports.signup = async (req, res) => {
   try {
-    console.log('Received signup request');
-    console.log('Request body:', req.body); // 👈 ADD THIS
+  console.log('Received signup request');
+  console.log('Request body:', JSON.stringify(req.body, null, 2));
 
     const { username, email, password } = req.body;
 
@@ -29,8 +29,8 @@ exports.signup = async (req, res) => {
 // ================= Login =================
 exports.login = async (req, res) => {
   try {
-    console.log('Received login request');
-    console.log('Request body:', req.body); // 👈 ADD THIS
+  console.log('Received login request');
+  console.log('Request body:', JSON.stringify(req.body, null, 2));
     
     const { email, password } = req.body;
 

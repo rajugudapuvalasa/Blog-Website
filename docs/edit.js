@@ -48,13 +48,22 @@ editBlogForm.addEventListener('submit', async (e) => {
       body: formData
     });
 
-    const result = await res.json();
+    let result;
+    const contentType = res.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      result = await res.json();
+    } else {
+      const text = await res.text();
+      console.error('Server returned non-JSON:', text);
+      alert('Server error: ' + text);
+      return;
+    }
 
     if (res.ok) {
       alert('Blog updated successfully');
       window.location.href = 'dashboard.html';
     } else {
-      alert(result.error || 'Failed to update blog');
+      alert(result.error || result.message || 'Failed to update blog');
     }
   } catch (err) {
     console.error('Update error:', err);
