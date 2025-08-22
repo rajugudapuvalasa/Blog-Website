@@ -3,6 +3,14 @@ const Blog = require('../models/Blog');
 // ✅ Create Blog
 exports.createBlog = async (req, res) => {
   try {
+     console.log("Incoming blog data:", req.body);
+    console.log("Incoming file:", req.file);
+
+    let imageUrl = null;
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path);
+      imageUrl = result.secure_url;
+    }
     const { title, category, content } = req.body;
 
     if (!title) return res.status(400).json({ error: 'Title is required' });
@@ -14,7 +22,7 @@ exports.createBlog = async (req, res) => {
       title,
       content,
       category,
-      image: req.file.path, // Cloudinary URL
+      image: imageUrl, // Cloudinary URL
       author: req.userId
     });
 
