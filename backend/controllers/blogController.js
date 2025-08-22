@@ -28,7 +28,7 @@ exports.createBlog = async (req, res) => {
     res.status(201).json({ message: 'Blog created successfully', blog: newBlog });
   } catch (error) {
     console.error('Error creating blog:', error);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -38,7 +38,7 @@ exports.getBlogs = async (req, res) => {
     const blogs = await Blog.find().populate('author', 'username');
     res.status(200).json(blogs);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch blogs' });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -49,7 +49,7 @@ exports.getSingleBlog = async (req, res) => {
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
     res.json(blog);
   } catch (err) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -78,7 +78,7 @@ exports.updateBlog = async (req, res) => {
     res.json({ message: 'Blog updated successfully', blog });
   } catch (err) {
     console.error('Update Blog Error:', err);
-    res.status(500).json({ error: 'Failed to update blog' });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -95,7 +95,7 @@ exports.deleteBlog = async (req, res) => {
     await Blog.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: 'Blog deleted successfully' });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to delete blog' });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -117,6 +117,6 @@ exports.toggleLike = async (req, res) => {
     await blog.save();
     res.json({ liked: !liked, likesCount: blog.likes.length });
   } catch (err) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ message: error.message });
   }
 };
