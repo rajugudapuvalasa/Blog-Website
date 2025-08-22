@@ -16,7 +16,13 @@ if (signupForm) {
 
       const result = await res.json();
       if (res.ok) {
-        localStorage.setItem('token', result.token);
+        const token = result.token;
+        localStorage.setItem('token', token);
+
+        // Decode JWT to get userId
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        localStorage.setItem('userId', payload.id);
+
         alert('Signup successful');
         window.location.href = 'dashboard.html';
       } else {
@@ -34,7 +40,6 @@ const loginForm = document.getElementById('loginForm');
 if (loginForm) {
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-
     const formData = new FormData(loginForm);
     const data = Object.fromEntries(formData.entries());
 
@@ -46,10 +51,14 @@ if (loginForm) {
       });
 
       const result = await res.json();
-
       if (res.ok) {
-        localStorage.setItem('token', result.token);
-        localStorage.setItem('userId', result.userId);
+        const token = result.token;
+        localStorage.setItem('token', token);
+
+        // Decode JWT to get userId
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        localStorage.setItem('userId', payload.id);
+
         alert('Login successful!');
         window.location.href = 'dashboard.html';
       } else {
@@ -61,8 +70,8 @@ if (loginForm) {
     }
   });
 }
- 
-//password toggle
+
+// ================= Password toggle =================
 document.querySelectorAll(".toggle-password-icon").forEach((icon) => {
   icon.addEventListener("click", () => {
     const input = icon.previousElementSibling;

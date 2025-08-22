@@ -13,7 +13,10 @@ exports.createBlog = async (req, res) => {
     if (!category) return res.status(400).json({ error: 'Category is required' });
     if (!content) return res.status(400).json({ error: 'Content is required' });
     if (!req.file) return res.status(400).json({ error: 'Image is required' });
-
+    if (!req.userId) {
+      return res.status(401).json({ error: 'Unauthorized: userId missing' });
+    }
+    
     const newBlog = new Blog({
       title,
       content,
