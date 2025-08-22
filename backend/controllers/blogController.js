@@ -1,7 +1,6 @@
 const Blog = require('../models/Blog');
-const cloudinary = require('../config/cloudinary'); // ✅ Cloudinary config
 
-// ✅ Create Blog with Cloudinary image upload
+// ✅ Create Blog
 exports.createBlog = async (req, res) => {
   try {
     const { title, category, content } = req.body;
@@ -11,16 +10,11 @@ exports.createBlog = async (req, res) => {
     if (!content) return res.status(400).json({ error: 'Content is required' });
     if (!req.file) return res.status(400).json({ error: 'Image is required' });
 
-    // ✅ Upload to Cloudinary
-    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
-      folder: 'blog_images'
-    });
-
     const newBlog = new Blog({
       title,
       content,
       category,
-      image: uploadResult.secure_url, // ✅ Save Cloudinary URL
+      image: req.file.path, // Cloudinary URL
       author: req.userId
     });
 
@@ -46,7 +40,7 @@ exports.getBlogs = async (req, res) => {
   }
 };
 
-// ✅ Get Single Blog by ID
+// ✅ Get Single Blog
 exports.getSingleBlog = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id).populate('author', 'username');
@@ -59,26 +53,13 @@ exports.getSingleBlog = async (req, res) => {
   }
 };
 
-// ✅ Update Blog with optional Cloudinary upload
+// ✅ Update Blog
 exports.updateBlog = async (req, res) => {
   try {
-    console.log('Update Blog Request Params:', JSON.stringify(req.params, null, 2));
-    console.log('Update Blog Request Body:', JSON.stringify(req.body, null, 2));
-    console.log('Update Blog Request UserId:', req.userId);
-    if (req.file) {
-      console.log('Update Blog Request File:', req.file.originalname);
-    } else {
-      console.log('No file uploaded in update request.');
-    }
-
     const blog = await Blog.findById(req.params.id);
-    if (!blog) {
-      console.error('Blog not found for update:', req.params.id);
-      return res.status(404).json({ error: 'Blog not found' });
-    }
+    if (!blog) return res.status(404).json({ error: 'Blog not found' });
 
     if (blog.author.toString() !== req.userId) {
-      console.error('Access denied: Not your blog. Blog author:', blog.author, 'User:', req.userId);
       return res.status(403).json({ error: 'Access denied: Not your blog' });
     }
 
@@ -87,15 +68,7 @@ exports.updateBlog = async (req, res) => {
     blog.category = req.body.category || blog.category;
 
     if (req.file) {
-      try {
-        const uploadResult = await cloudinary.uploader.upload(req.file.path, {
-          folder: 'blog_images'
-        });
-        blog.image = uploadResult.secure_url;
-      } catch (cloudErr) {
-        console.error('Cloudinary upload error:', cloudErr);
-        return res.status(500).json({ error: 'Image upload failed: ' + (cloudErr.message || cloudErr) });
-      }
+      blog.image = req.file.path; // New Cloudinary URL
     }
 
     await blog.save();
@@ -127,7 +100,7 @@ exports.deleteBlog = async (req, res) => {
   }
 };
 
-// ✅ Like/Unlike Blog
+// ✅ Like / Unlike Blog
 exports.toggleLike = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
