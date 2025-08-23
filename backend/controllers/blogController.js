@@ -1,4 +1,5 @@
 const Blog = require('../models/Blog');
+const cloudinary = require('cloudinary').v2;
 
 // Create blog (image already on Cloudinary via multer-storage-cloudinary)
 exports.createBlog = async (req, res) => {
