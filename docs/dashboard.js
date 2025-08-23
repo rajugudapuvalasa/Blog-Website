@@ -37,7 +37,7 @@ if (document.location.pathname.includes('dashboard.html')) {
       if (matchesSearch && matchesCategory) {
         blogDiv.innerHTML += `
           <div class="blog">
-            <img src="https://blog-website-rpuc.onrender.com/uploads/${b.image}" alt="Blog Image" style="max-width:200px;" />
+            <img src="${b.image}" alt="Blog Image" style="max-width:200px;" />
             <div class="cnt">
               <h3>${b.title}</h3>
               <p>${b.content.substring(0, 0)}des...</p>
