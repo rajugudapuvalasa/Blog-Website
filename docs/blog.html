@@ -90,7 +90,7 @@
         }
 
         blogDetails.innerHTML = `
-          <img src="https://blog-website-rpuc.onrender.com/uploads/${blog.image}" alt="Blog Image">
+          <img src="${blog.image}" alt="Blog Image">
           <h2>${blog.title}</h2>
           <p class="meta"><strong>Category:</strong> ${blog.category || 'Uncategorized'}</p>
           <p class="meta"><strong>Author:</strong> ${blog.author?.username || 'Unknown'}</p>
