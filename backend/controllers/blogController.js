@@ -1,5 +1,4 @@
 const Blog = require('../models/Blog');
-const cloudinary = require('cloudinary').v2;
 
 // Create blog (image already on Cloudinary via multer-storage-cloudinary)
 exports.createBlog = async (req, res) => {
@@ -9,17 +8,12 @@ exports.createBlog = async (req, res) => {
     if (!category) return res.status(400).json({ error: 'Category is required' });
     if (!content) return res.status(400).json({ error: 'Content is required' });
     if (!req.file?.path) return res.status(400).json({ error: 'Image is required' });
-
-    const result = await cloudinary.v2.uploader.upload(req.file.path, {
-      folder: "blog_images",
-      allowed_formats: ["jpg", "jpeg", "png"]
-    });
-
+    
     const blog = await Blog.create({
       title,
       content,
       category,
-      image: result.secure_url,     // Cloudinary secure_url from multer-storage-cloudinary
+      image: req.file.path,     // Cloudinary secure_url from multer-storage-cloudinary
       author: req.userId
     });
 
