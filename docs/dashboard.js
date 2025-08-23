@@ -72,7 +72,7 @@ if (document.location.pathname.includes('dashboard.html')) {
       if (!token) return alert('Login required to like!');
 
       try {
-        const res = await fetch(`https://blog-website-rpuc.onrender.com/api/blogs/like/${blogId}`, {
+        const res = await fetch(`https://blog-website-rpuc.onrender.com/api/blogs/${blogId}/like`, {
           method: 'POST',
           headers: { Authorization: token }
         });
