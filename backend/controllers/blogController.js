@@ -1,73 +1,54 @@
 const Blog = require('../models/Blog');
-const cloudinary = require("../config/cloudinary");
 
-// ✅ Create Blog
+// Create blog (image already on Cloudinary via multer-storage-cloudinary)
 exports.createBlog = async (req, res) => {
   try {
-    console.log("Headers:", req.headers);
-    console.log("UserId from token:", req.userId);
-    console.log("Body:", req.body);
-    console.log("File:", req.file);
-
-    const { title, category, content } = req.body;
-
+    const { title, category, content } = req.body || {};
     if (!title) return res.status(400).json({ error: 'Title is required' });
     if (!category) return res.status(400).json({ error: 'Category is required' });
     if (!content) return res.status(400).json({ error: 'Content is required' });
-    if (!req.file) return res.status(400).json({ error: 'Image is required' });
-    if (!req.userId) {
-      return res.status(401).json({ error: 'Unauthorized: userId missing' });
-    }
+    if (!req.file?.path) return res.status(400).json({ error: 'Image is required' });
 
-    const newBlog = new Blog({
+    const blog = await Blog.create({
       title,
       content,
       category,
-      image: req.file.path, // Cloudinary URL
+      image: req.file.path,     // Cloudinary secure_url from multer-storage-cloudinary
       author: req.userId
     });
 
-    await newBlog.save();
-    res.status(201).json({ message: 'Blog created successfully', blog: newBlog });
-  } catch (error) {
-    console.error('Error creating blog:', error);
-    if (!res.headersSent) {
-      res.status(500).json({ error: error.message || 'Internal server error' });
-    }
+    res.status(201).json({ message: 'Blog created successfully', blog });
+  } catch (e) {
+    res.status(500).json({ error: e.message || 'Server error' });
   }
 };
 
-// ✅ Get All Blogs
+// Get all
 exports.getBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find().populate('author', 'username');
-    res.status(200).json(blogs);
-  } catch (error) {
-    if (!res.headersSent) {
-      res.status(500).json({ error: error.message || 'Internal server error' });
-    }
+    res.json(blogs);
+  } catch (e) {
+    res.status(500).json({ error: e.message || 'Server error' });
   }
 };
 
-// ✅ Get Single Blog
+// Get one
 exports.getSingleBlog = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id).populate('author', 'username');
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
     res.json(blog);
-  } catch (error) {
-    if (!res.headersSent) {
-      res.status(500).json({ error: error.message || 'Internal server error' });
-    }
+  } catch (e) {
+    res.status(500).json({ error: e.message || 'Server error' });
   }
 };
 
-// ✅ Update Blog
+// Update (optional new image)
 exports.updateBlog = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
-
     if (blog.author.toString() !== req.userId) {
       return res.status(403).json({ error: 'Access denied: Not your blog' });
     }
@@ -76,57 +57,48 @@ exports.updateBlog = async (req, res) => {
     blog.content = req.body.content || blog.content;
     blog.category = req.body.category || blog.category;
 
-    if (req.file) {
-      blog.image = req.file.path; // New Cloudinary URL
+    if (req.file?.path) {
+      blog.image = req.file.path; // new Cloudinary url
     }
 
     await blog.save();
     res.json({ message: 'Blog updated successfully', blog });
-  } catch (error) {
-    console.error('Update Blog Error:', error);
-    res.status(500).json({ error: error.message || 'Internal server error' });
+  } catch (e) {
+    res.status(500).json({ error: e.message || 'Server error' });
   }
 };
 
-// ✅ Delete Blog
+// Delete
 exports.deleteBlog = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
-
     if (blog.author.toString() !== req.userId) {
       return res.status(403).json({ error: 'Access denied: Not your blog' });
     }
 
     await Blog.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: 'Blog deleted successfully' });
-  } catch (error) {
-    if (!res.headersSent) {
-      res.status(500).json({ error: error.message || 'Internal server error' });
-    }
+    res.json({ message: 'Blog deleted successfully' });
+  } catch (e) {
+    res.status(500).json({ error: e.message || 'Server error' });
   }
 };
 
-// ✅ Like / Unlike Blog
+// Like/Unlike
 exports.toggleLike = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
 
     const userId = req.userId;
-    const liked = blog.likes.includes(userId);
+    const liked = blog.likes.some(id => id.toString() === userId);
 
-    if (liked) {
-      blog.likes.pull(userId);
-    } else {
-      blog.likes.push(userId);
-    }
+    if (liked) blog.likes.pull(userId);
+    else blog.likes.push(userId);
 
     await blog.save();
     res.json({ liked: !liked, likesCount: blog.likes.length });
-  } catch (error) {
-    if (!res.headersSent) {
-      res.status(500).json({ error: error.message || 'Internal server error' });
-    }
+  } catch (e) {
+    res.status(500).json({ error: e.message || 'Server error' });
   }
 };

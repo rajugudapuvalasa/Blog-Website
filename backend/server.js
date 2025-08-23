@@ -38,6 +38,13 @@ app.get('/api/auth/test', (req, res) => {
   res.json({ message: "Backend working fine!" });
 });
 
+// JSON error handler (so errors don’t return HTML pages)
+app.use((err, req, res, next) => {
+  console.error('Unhandled Error:', err);
+  if (res.headersSent) return;
+  res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
