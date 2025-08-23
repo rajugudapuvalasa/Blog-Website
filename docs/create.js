@@ -27,32 +27,23 @@ blogForm.addEventListener('submit', async function (e) {
     const res = await fetch('https://blog-website-rpuc.onrender.com/api/blogs/create', {
       method: 'POST',
       headers: {
-        Authorization: 'Bearer ' + token
+        Authorization: `Bearer ${token}`
       },
       body: formData
     });
 
-    let result;
-    const contentType = res.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      result = await res.json();
-    } else {
-      const text = await res.text();
-      console.error('Server returned non-JSON:', text);
-      alert('Server error: ' + text);
-      return;
-    }
-
     if (!res.ok) {
-      console.error('Error creating blog:', result);
-      alert(result.error || result.message || 'Failed to create blog.');
+      const text = await res.text();
+      console.error("Server returned non-JSON:", text);
+      alert("Error: " + text);
       return;
     }
 
-    alert('Blog posted successfully!');
+    const result = await res.json();
+    alert(result.message);
     window.location.href = 'dashboard.html';
-  } catch (error) {
-    console.error('Network error:', error);
-    alert('Something went wrong. Please try again.');
+  } catch (err) {
+    console.error("Network error:", err);
+    alert("Something went wrong. Try again.");
   }
 });

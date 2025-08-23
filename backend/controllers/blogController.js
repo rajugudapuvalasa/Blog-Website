@@ -4,8 +4,10 @@ const cloudinary = require("../config/cloudinary");
 // ✅ Create Blog
 exports.createBlog = async (req, res) => {
   try {
-     console.log("Incoming blog data:", req.body);
-    console.log("Incoming file:", req.file);
+    console.log("Headers:", req.headers);
+    console.log("UserId from token:", req.userId);
+    console.log("Body:", req.body);
+    console.log("File:", req.file);
 
     const { title, category, content } = req.body;
 
@@ -16,7 +18,7 @@ exports.createBlog = async (req, res) => {
     if (!req.userId) {
       return res.status(401).json({ error: 'Unauthorized: userId missing' });
     }
-    
+
     const newBlog = new Blog({
       title,
       content,
