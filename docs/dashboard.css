@@ -99,6 +99,8 @@ header h2 {
 }
 .blog-actions {
   margin-top: 10px;
+  display: flex;
+  gap: 20px;
 }
 .action-btn {
   background: none;

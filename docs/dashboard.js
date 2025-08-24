@@ -44,7 +44,7 @@ if (document.location.pathname.includes('dashboard.html')) {
             <div class="blog">
               <img src="${b.image}" alt="Blog Image" style="max-width:200px;" />
               <div class="cnt">
-                <h3>${b.title}</h3>
+                <h3>${b.title.substring(0,13)}..</h3>
                 <p>des...<a href="blog.html?id=${b._id}">Read More</a></p>
                 <p>Category: ${b.category || 'Uncategorized'}</p>
                 <p>Author: ${b.author?.username || 'Unknown'}</p>
