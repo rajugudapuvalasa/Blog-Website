@@ -4,7 +4,7 @@ const blogController = require('../controllers/blogController');
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload'); // multer-storage-cloudinary
 const cloudinary = require('../config/cloudinary');
-
+const admin = require('../middleware/admin');
 // Test Cloudinary (GET in browser)
 router.get('/test-cloudinary', async (req, res) => {
   try {

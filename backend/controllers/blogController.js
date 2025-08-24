@@ -1,5 +1,5 @@
 const Blog = require('../models/Blog');
-
+const admin = require('../middleware/admin');
 // Create blog (image already on Cloudinary via multer-storage-cloudinary)
 exports.createBlog = async (req, res) => {
   try {
@@ -49,8 +49,9 @@ exports.updateBlog = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
-    if (blog.author.toString() !== req.userId) {
-      return res.status(403).json({ error: 'Access denied: Not your blog' });
+    // Allow admin to update any blog
+    if (req.userRole !== "admin" && blog.author.toString() !== req.userId) {
+      return res.status(403).json({ error: 'Not authorized' });
     }
 
     blog.title = req.body.title || blog.title;
@@ -73,8 +74,9 @@ exports.deleteBlog = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
-    if (blog.author.toString() !== req.userId) {
-      return res.status(403).json({ error: 'Access denied: Not your blog' });
+    // Allow admin to delete any blog
+    if (req.userRole !== "admin" && blog.author.toString() !== req.userId) {
+      return res.status(403).json({ error: 'Not authorized' });
     }
 
     await Blog.findByIdAndDelete(req.params.id);
